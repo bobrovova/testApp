@@ -1,8 +1,8 @@
 import { Button, Card } from 'antd';
-import React from 'react';
+import React, { memo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { BOOK_ROUTE } from 'constants/routes';
-import IBook from 'entities/book';
+import { BOOK_ROUTE } from 'src/constants/routes';
+import IBook from 'src/types/book';
 
 interface IBookCardProps {
   book: IBook;
@@ -32,4 +32,4 @@ const BookCard = ({book}: IBookCardProps) => {
   )
 }
 
-export default BookCard;
+export default memo(BookCard);

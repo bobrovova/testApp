@@ -1,14 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Button, Input, Table, Tag } from 'antd';
+import { Button, Input, Pagination, Table, Tag } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
-import Loader from 'components/loader';
-import useStateWithCallback from 'hooks/use-state-with-callback';
-import IBook from 'entities/book';
-import ICharacter from 'entities/character';
-import { HOME_ROUTE } from 'constants/routes';
+import Loader from 'src/components/loader';
+import useStateWithCallback from 'src/hooks/use-state-with-callback';
+import IBook from 'src/types/book';
+import ICharacter from 'src/types/character';
+import { HOME_ROUTE } from 'src/constants/routes';
 
 import './style.scss'
+
+const PAGE_SIZE = 10;
 
 const TABLE_COLUMNS = [
   {
@@ -42,32 +44,45 @@ const Book = () => {
   const location = useLocation();
   const history = useHistory();
   const { book }: { book: IBook } = location.state as any;
+  const [page, setPage] = useState(1);
+  const totalPage = useMemo(() => {
+    return book.characters.length / PAGE_SIZE
+  }, [book])
 
   const fetchCharacters = useCallback(async () => {
     setIsLoading(true);
-    const data = await Promise.all(book.characters.map(async (url: string) => {
-      const response = await fetch(url);
+    const data = await Promise.all([...book.characters].splice((page - 1) * PAGE_SIZE, PAGE_SIZE).map(async (url: string) => {
+      const response = await fetch(`${url}`);
       const character: ICharacter[] = await response.json();
       return character;
     }))
     setCharacters(data, () => setIsLoading(false))
-  }, [setCharacters, setIsLoading, book])
+    // eslint-disable-next-line
+  }, [book, page])
 
   const onChangeSearch = useCallback((e: any) => {
-    setSearchValue(e.target.value)
-  }, [setSearchValue])
+    setSearchValue(e.target.value.toLowerCase())
+  }, [])
 
   const onClickBack = useCallback(() => {
     history.push(HOME_ROUTE)
-  }, [])
+  }, [history])
 
   useEffect(() => {
     fetchCharacters()
-  }, [])
+    // eslint-disable-next-line
+  }, [page])
 
   const filteredCharacters = useMemo(() => {
-    return characters.filter((character: ICharacter) => character.name.includes(searchValue))
+    return characters.filter((character: ICharacter) => 
+      character.name.toLowerCase().includes(searchValue) ||
+      character.aliases.some((alias) => alias.toLowerCase().includes(searchValue))
+    )
   }, [searchValue, characters])
+
+  const onChangePage = (value: number) => {
+    setPage(value);
+  }
 
   if (isLoading) {
     return <Loader />
@@ -86,6 +101,11 @@ const Book = () => {
             placeholder="Type name of character"
             onChange={onChangeSearch}
           />
+        )}
+        rowKey={(item: ICharacter) => item.url}
+        pagination={false}
+        footer={() => (
+          <Pagination current={page} onChange={onChangePage} total={totalPage} showSizeChanger={false} />
         )}
       />
     </Content>

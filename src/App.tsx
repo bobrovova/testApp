@@ -6,9 +6,9 @@ import {
   Route,
 } from 'react-router-dom';
 import './App.scss'
-import Books from 'containers/books';
-import Book from 'containers/book';
-import { BOOK_ROUTE, HOME_ROUTE } from 'constants/routes';
+import Books from 'src/containers/books';
+import Book from 'src/containers/book';
+import { BOOK_ROUTE, HOME_ROUTE } from 'src/constants/routes';
 
 function App() {
   return (

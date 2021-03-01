@@ -4,4 +4,5 @@ export default interface IBook {
   country: string;
   released: string;
   characters: string[];
+  isbn: string;
 }

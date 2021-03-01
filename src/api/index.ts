@@ -1,5 +1,5 @@
-import {BOOKS_ENDPOINT} from 'constants/api';
+import {BOOKS_ENDPOINT} from 'src/constants/api';
 
-export const fetchBooks = async () => {
+export const fetchBooks = () => {
   return fetch(BOOKS_ENDPOINT);
 }

@@ -1,6 +1,6 @@
 import { Spin } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
-import React from 'react';
+import React, { memo } from 'react';
 
 import './style.scss'
 
@@ -10,4 +10,4 @@ const Loader = () => (
   </Content>
 )
 
-export default Loader;
+export default memo(Loader);

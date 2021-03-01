@@ -1,25 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Layout } from 'antd';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from 'react-router-dom';
+import './App.scss'
+import Books from 'containers/books';
+import Book from 'containers/book';
+import { BOOK_ROUTE, HOME_ROUTE } from 'constants/routes';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Layout className="app-container">
+        <Switch>
+          <Route path={BOOK_ROUTE}>
+            <Book />
+          </Route>
+          <Route path={HOME_ROUTE}>
+            <Books />
+          </Route>
+        </Switch>
+      </Layout>
+    </Router>
   );
 }
 
